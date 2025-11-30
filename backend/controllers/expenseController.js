@@ -40,7 +40,8 @@ const addExpense = asyncHandler(async (req, res) => {
 
 const getExpenses = asyncHandler(async (req, res) => {
     const dateFilter = {};
-    const { from, to } = req.query;
+    const { from, to, groupId } = req.query;
+
     if(from) {
         const fromDate = new Date(from);
         fromDate.setUTCHours(0, 0, 0, 0)
@@ -52,23 +53,13 @@ const getExpenses = asyncHandler(async (req, res) => {
         dateFilter.$lte = toDate;
         
     }
-    res.status(200).json(await Expense.find({ createdBy: req.user.id, groupId: null, ...(Object.keys(dateFilter).length && { date: dateFilter }) }));
-});
-
-const getGroupExpenses = asyncHandler(async (req, res) => {
-    const groupId = req.params.groupId;
-    if(groupId && (await Group.findById(groupId)).users.includes(req.user.id)) {
-        res.status(200).json(await Expense.find({ groupId }));
-    } else {
-        res.status(400);
-        throw new Error("Group is invalid or user doesn't belong to it");
-    }
+    res.status(200).json(await Expense.find({ createdBy: req.user.id, groupId: groupId, ...(Object.keys(dateFilter).length && { date: dateFilter }) }));
 });
 
 const getExpense = asyncHandler(async (req, res) => {
     const expense = await Expense.findById(req.params.expenseId);
 
-    if(expense.user_id.toString() !== req.user.id) {
+    if(expense.createdBy.toString() !== req.user.id) {
         res.status(403);
         throw new Error("User doesn't have permission to change others expenses")
     }
@@ -82,7 +73,7 @@ const updateExpense = asyncHandler(async (req, res) => {
         createdBy: req.user.id
     }, req.body, { new: true });
 
-    if(!expense) {
+    if(!updatedExpense) {
         res.status(404);
         throw new Error("Expense not found or you are not authorized to modify it");
     }
@@ -106,4 +97,4 @@ const deleteExpense = asyncHandler(async (req, res) => {
     res.status(200).json(expense);
 });
 
-export { addExpense, getExpenses, getExpense, deleteExpense, updateExpense, getGroupExpenses };
+export { addExpense, getExpenses, getExpense, deleteExpense, updateExpense };
