@@ -1,10 +1,10 @@
-# Household Budget App
+# Expense Tracker App
 
-The **Household Budget App** is a full-stack mobile application designed to help users manage both shared & personal expenses. It features a robust backend built with **Node.js** and **Express**, and a modern mobile frontend developed with **React Native** and **Expo**.
+The **Expense Tracker App** is a full-stack mobile application designed to help users manage both shared & personal expenses. It features a robust backend built with **Node.js** and **Express**, and a modern mobile frontend developed with **React Native** and **Expo**.
 
 **Key Features:**
 * **User Authentication:** Secure registration, login, and token management (Access/Refresh tokens) using JWT.
-* **Group Management:** Create and manage household groups, invite members, and view group details.
+* **Group Management:** Create and manage groups, invite members, and view group details.
 * **Expense Tracking:** Add, edit, and delete expenses within specific groups.
 * **Real-time Data:** specific endpoints for fetching user and group-specific data.
 * **Rate Limiting:** Implemented using **Upstash (Redis)** to prevent API abuse.
